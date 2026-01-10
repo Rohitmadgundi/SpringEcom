@@ -1,5 +1,7 @@
 package com.sbecom.controller;
 
+import com.sbecom.dto.UserRequest;
+import com.sbecom.dto.UserResponse;
 import com.sbecom.model.User;
 import com.sbecom.service.UserService;
 import lombok.Data;
@@ -11,40 +13,47 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(("/api/user"))
+@RequestMapping("/api/user")
 @Data
 public class UserController {
 
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<String> addUser(@RequestBody User user){
-        userService.addUser(user);
+    public ResponseEntity<String> addUser(@RequestBody UserRequest userRequest){
+        userService.addUser(userRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body("User Added Successfully");
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers(){
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(userService.getAllUsers());
+    public ResponseEntity<List<UserResponse>> getAllUsers(){
+        List<UserResponse> users = userService.getAllUsers();
+
+        if(!users.isEmpty())
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(users);
+        else
+            return ResponseEntity
+                    .status(HttpStatus.NO_CONTENT)
+                    .body(null);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<User> getUser(@PathVariable Long id){
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(userService.getUser(id));
+    public ResponseEntity<UserResponse> getUser(@PathVariable Long id){
+        return userService.getUser(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(()-> ResponseEntity.notFound().build());
     }
 
-    @PutMapping
-    public ResponseEntity<String> updateUser(@RequestBody User user){
-        userService.updateUser(user);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body("User Updated Successfully");
+    @PutMapping("{id}")
+    public ResponseEntity<String> updateUser(@RequestBody UserRequest user,
+                                             @PathVariable Long id){
+        boolean updated = userService.updateUser(user,id);
+        return updated ? ResponseEntity.ok("User updated successfully")
+                : ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("{id}")

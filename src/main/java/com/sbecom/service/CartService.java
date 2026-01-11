@@ -1,11 +1,23 @@
 package com.sbecom.service;
 
+import com.sbecom.dto.CartItemRequest;
+import com.sbecom.model.CartItem;
+import com.sbecom.model.Product;
+import com.sbecom.model.User;
+import com.sbecom.repository.CartItemRepository;
 import com.sbecom.repository.ProductRepository;
+import com.sbecom.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @Data
+@Transactional
 public class CartService {
 
     private final ProductRepository productRepository;

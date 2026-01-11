@@ -5,7 +5,7 @@ import com.sbecom.dto.UserRequest;
 import com.sbecom.dto.UserResponse;
 import com.sbecom.model.Address;
 import com.sbecom.model.User;
-import com.sbecom.repository.UserRepo;
+import com.sbecom.repository.UserRepository;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
@@ -16,38 +16,38 @@ import java.util.Optional;
 @Data
 public class UserService {
 
-    private final UserRepo userRepo;
+    private final UserRepository userRepository;
 
     public void addUser(UserRequest userRequest) {
         User user = new User();
         updateUserFromUserRequest(userRequest,user);
-        userRepo.save(user);
+        userRepository.save(user);
     }
 
     public List<UserResponse> getAllUsers() {
-        return userRepo.findAll()
+        return userRepository.findAll()
                 .stream()
                 .map(this::mapToUserResponse)
                 .toList();
     }
 
     public Optional<UserResponse> getUser(Long id) {
-        return userRepo.findById(id)
+        return userRepository.findById(id)
                 .map(this::mapToUserResponse);
     }
 
     public boolean updateUser(UserRequest userRequest,Long id) {
-        return userRepo.findById(id)
+        return userRepository.findById(id)
                 .map(existingUser -> {
                     updateUserFromUserRequest(userRequest,existingUser);
-                    userRepo.save(existingUser);
+                    userRepository.save(existingUser);
                     return true;
                 })
                 .orElse(false);
     }
 
     public void deleteUser(Long id) {
-        userRepo.deleteById(id);
+        userRepository.deleteById(id);
     }
 
     public void updateUserFromUserRequest(UserRequest userRequest,User user){

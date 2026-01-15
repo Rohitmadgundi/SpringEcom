@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: SpringEcom
+  datasource:
+    username: postgres
+    password: root
+    url: jdbc:postgresql://localhost:5432/ecomdb
+  jpa:
+    database: postgresql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+#  endpoint:
+#    shutdown:
+#      access: unrestricted
+
+
+#spring.application.name=SpringEcom
+#spring.datasource.username=sa
+#spring.datasource.password=
+#spring.datasource.url=jdbc:h2:mem:testdb
+#spring.jpa.hibernate.ddl-auto=create
+#spring.jpa.show-sql=true
+#spring.h2.console.enabled=true
+#
+#management.endpoints.web.exposure.include=*
+#management.endpoint.shutdown.access=unrestricted
